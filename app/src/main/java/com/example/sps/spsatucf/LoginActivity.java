@@ -1,5 +1,5 @@
 package com.example.sps.spsatucf;
-// bejan you are a <isert politically correct insult>!
+// bejan you are a <insert politically correct insult>!
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
