@@ -23,7 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".eventsActivity"></activity>
+        <activity android:name=".eventsActivity" />
+        <activity android:name=".PollingActivity"></activity>
     </application>
 
 </manifest>
