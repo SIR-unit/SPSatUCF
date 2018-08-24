@@ -37,6 +37,7 @@ public class EventsActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         dref = database.getReference(events);
+        adapter = new CustomAdapter(entries);
 
         dref.addValueEventListener(new ValueEventListener() {
             @Override
