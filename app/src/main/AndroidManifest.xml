@@ -25,7 +25,11 @@
         <activity android:name=".PollingActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".NewsActivity"></activity>
+        <activity android:name=".NewsActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".ReviewActivity" />
+        <activity android:name=".QuizActivity" />
+        <activity android:name=".PointsActivity"></activity>
     </application>
 
 </manifest>

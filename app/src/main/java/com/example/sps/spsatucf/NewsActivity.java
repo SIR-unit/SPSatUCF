@@ -94,25 +94,25 @@ public class NewsActivity extends AppCompatActivity {
 
                     case R.id.nav_quiz: {
                         finish();
-                        //startActivity(new Intent(NewsActivity.this, QuizActivity.class));
+                        startActivity(new Intent(NewsActivity.this, QuizActivity.class));
                         break;
                     }
 
                     case R.id.nav_review: {
                         finish();
-                        //startActivity(new Intent(NewsActivity.this, ReviewActivity.class));
+                        startActivity(new Intent(NewsActivity.this, ReviewActivity.class));
                         break;
                     }
 
                     case R.id.nav_points: {
                         finish();
-                        //startActivity(new Intent(NewsActivity.this, PointsActivity.class));
+                        startActivity(new Intent(NewsActivity.this, PointsActivity.class));
                         break;
                     }
 
                     case R.id.nav_settings: {
                         finish();
-                        //startActivity(new Intent(NewsActivity.this, SettingsActivity.class));
+                        startActivity(new Intent(NewsActivity.this, SettingsActivity.class));
                         break;
                     }
                 }
