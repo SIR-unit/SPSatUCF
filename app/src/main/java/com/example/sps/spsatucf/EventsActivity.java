@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.format.Time;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,18 +61,24 @@ public class EventsActivity extends AppCompatActivity {
         dref = database.getReference().child(events);
         adapter = new CustomAdapter(entries);
 
-        // **********************
         view = findViewById(R.id.eventsRecyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         view.setLayoutManager(layoutManager);
         view.setAdapter(adapter);
-        // ***********************
 
+        // add event listener that repopulates the entries array which is a list of entries to be
+        // displayed in the events page. Notice that this listener is added to a reference to the
+        // events section of the database
         dref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 entries.clear();
+                Time now = new Time();
+                now.setToNow();
+                // each event is a child of the events data snopahot
                 for(DataSnapshot event : dataSnapshot.getChildren()){
+
+                    //populate entry
                     Entry entry = new Entry();
                     for(DataSnapshot param : event.getChildren()){
                         switch(param.getKey()) {
@@ -83,19 +90,31 @@ public class EventsActivity extends AppCompatActivity {
                                 break;
                             case "description": entry.description = param.getValue().toString();
                                 break;
-                            case "imageloc": entry.imageloc = param.getValue().toString();
+                            case "image": entry.imageloc = param.getValue().toString();
                                 break;
                         }
                     }
-                    entries.add(entry);
+
+                    // check that time in entry is after the current time
+                    Time entrytime = new Time();
+                    String dateparts[];
+                    if (entry.date.contains("-"))
+                        dateparts = entry.date.split("-");
+                    else
+                        dateparts = entry.date.split("/");
+                    entrytime.set(Integer.parseInt(dateparts[1]) + 1,
+                                  Integer.parseInt(dateparts[0]),
+                                  Integer.parseInt(dateparts[2].split(" ")[0]));
+
+                    // add this entry if it has yet to occur
+                    if (now.before(entrytime))
+                        entries.add(entry);
                 }
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                return;
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
     @Override
@@ -177,6 +196,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
 
     private ArrayList<Entry> entries;
 
+    // simple container class to hold views
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
         public TextView title, timeloc, description;
@@ -209,7 +229,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         Entry entry = entries.get(i);
         myViewHolder.title.setText(entry.title);
-        myViewHolder.timeloc.setText(entry.date + " @ " + entry.loc);
+        myViewHolder.timeloc.setText(entry.date + " at " + entry.loc);
         myViewHolder.description.setText(entry.description);
         myViewHolder.image.setImageResource(R.drawable.sps_logo);
     }
@@ -220,6 +240,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
     }
 }
 
+// the simplest container object for each entry.
 class Entry
 {
     public String title;
