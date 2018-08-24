@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -112,53 +111,52 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/btnA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNext" />
 
     <TextView
         android:id="@+id/txtCorrect"
         android:layout_width="253dp"
         android:layout_height="56dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="CORRECT!"
         android:textAlignment="center"
+        android:textColor="@color/colorCorrect"
         android:textSize="40dp"
+        android:textStyle="bold"
         android:visibility="invisible"
-        app:fontFamily="serif"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:fontFamily="sans-serif-condensed"
+        app:layout_constraintBottom_toTopOf="@+id/imgQuestion"
+        app:layout_constraintEnd_toStartOf="@+id/txtNext"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.016" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/txtNext"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
-        android:layout_marginBottom="17dp"
-        android:layout_marginEnd="17dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginBottom="27dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@color/colorGold"
-        android:text="Next"
         android:onClick="onClick_btnNext"
+        android:text="Next"
         app:layout_constraintBottom_toTopOf="@+id/imgQuestion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtCorrect"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.888" />
 </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.NavigationView
