@@ -1,30 +1,31 @@
 package com.example.sps.spsatucf;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.CompoundButtonCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,16 +37,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class PollingActivity extends AppCompatActivity {
 
     FirebaseDatabase db;
     DatabaseReference db_ref;
     FirebaseAuth firebaseAuth;
+
+    final String sharedPrefFile = "com.example.android.spsatucf";
 
     final String pollingTable = "poll";
     final String questionField = "question";
@@ -65,6 +68,11 @@ public class PollingActivity extends AppCompatActivity {
     private Integer numAnswers;
     private ArrayList<String> answers = new ArrayList<>();
 
+
+
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+
     /*
     Polling data (3 columns)
     ->Question: "How are your class?"
@@ -82,8 +90,28 @@ public class PollingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_polling);
 
+        SetupDrawerMenu();
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.signInWithEmailAndPassword("bghomashi@gmail.com", "qazqaz01").addOnCompleteListener(
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            Toast.makeText(PollingActivity.this, "Login Required", Toast.LENGTH_SHORT).show();
+            finish();
+            startActivity(new Intent(PollingActivity.this, LoginActivity.class));
+            return;                     // we cannot continue
+        }
+
+/*        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", null);
+        String password = sharedPreferences.getString("password", null);
+
+        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+            Toast.makeText(PollingActivity.this, "Login Required", Toast.LENGTH_SHORT).show();
+            finish();
+            startActivity(new Intent(PollingActivity.this, LoginActivity.class));
+            return;                     // we cannot continue
+        }
+
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
                 this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -97,6 +125,8 @@ public class PollingActivity extends AppCompatActivity {
                     }
                 }
         );
+*/
+
 
         SetupReference();
 
@@ -164,6 +194,7 @@ public class PollingActivity extends AppCompatActivity {
                     String[] votes = snapshot.getValue().toString().split(" ");     // grab values
                     // for each vote
                     for (String v : votes) {
+                        if (v == "") continue;
                         int i = Integer.parseInt(v);    // vote as integer
 
                         if (i >= pollingResults.size())
@@ -231,6 +262,7 @@ public class PollingActivity extends AppCompatActivity {
     {
         TextView txtQuestion = findViewById(R.id.txtQuestion);
         txtQuestion.setText(question);
+        txtQuestion.setTextSize(20);
 
         checkBoxes.clear();
         for (int i = 0; i < answers.size(); i++)
@@ -250,10 +282,10 @@ public class PollingActivity extends AppCompatActivity {
     {
         TextView txtQuestion = findViewById(R.id.txtQuestion);
         txtQuestion.setText(question);
+        txtQuestion.setTextSize(20);
 
         RecyclerView rclView = findViewById(R.id.rclView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-
         rclView.setLayoutManager(layoutManager);
 
         RecyclerView.Adapter rclAdapter = new RecyclerProgressAdapter(answers, pollingResults, progressBars2, maxVote, totVotes);
@@ -266,6 +298,82 @@ public class PollingActivity extends AppCompatActivity {
         Button btnBack = findViewById(R.id.btnBack);
         btnBack.setEnabled(true);
         btnBack.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mToggle.onOptionsItemSelected(item))
+            return true;                // consumed
+        return super.onOptionsItemSelected(item);
+    }
+    protected void SetupDrawerMenu()
+    {
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.closed);
+
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                // Set item as selected to show that this is what we're on?
+
+                Log.d("NAV MENU","Selection " + menuItem.getItemId());
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_news: {
+                        finish();
+                        startActivity(new Intent(PollingActivity.this, NewsActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_events: {
+                        finish();
+                        startActivity(new Intent(PollingActivity.this, EventsActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_polls: {
+                        finish();
+                        startActivity(new Intent(PollingActivity.this, PollingActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_quiz: {
+                        finish();
+                        startActivity(new Intent(PollingActivity.this, QuizActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_review: {
+                        finish();
+                        startActivity(new Intent(PollingActivity.this, ReviewActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_points: {
+                        finish();
+                        startActivity(new Intent(PollingActivity.this, PointsActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_settings: {
+                        finish();
+                        startActivity(new Intent(PollingActivity.this, SettingsActivity.class));
+                        break;
+                    }
+                }
+                // Close drawers
+                mDrawerLayout.closeDrawers();
+
+                return true;
+            }
+        });
     }
 }
 
@@ -319,7 +427,7 @@ class RecyclerAnswerAdapter extends RecyclerView.Adapter<RecyclerAnswerAdapter.V
         view.setOrientation(LinearLayout.HORIZONTAL);
 
         CheckBox checkBox = new CheckBox(context);
-        ColorStateList colorStateList = new ColorStateList(
+        ColorStateList  colorStateList = new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked}, // unchecked
                         new int[]{android.R.attr.state_checked} , // checked
@@ -353,6 +461,7 @@ class RecyclerAnswerAdapter extends RecyclerView.Adapter<RecyclerAnswerAdapter.V
 
         TextView txtAnswer = new TextView(context);
         txtAnswer.setTextColor(context.getResources().getColor(R.color.colorGold));
+        txtAnswer.setTextSize(20);
         txtAnswer.setPadding(0, 0, 10, 0);
 
         view.addView(txtAnswer);
@@ -424,6 +533,7 @@ class RecyclerProgressAdapter extends RecyclerView.Adapter<RecyclerProgressAdapt
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         TextView txtAnswer = new TextView(context);
         txtAnswer.setTextColor(context.getResources().getColor(R.color.colorGold));
+        txtAnswer.setTextSize(20);
         txtAnswer.setPadding(0, 0, 10, 0);
         view.addView(txtAnswer);
 
@@ -437,6 +547,7 @@ class RecyclerProgressAdapter extends RecyclerView.Adapter<RecyclerProgressAdapt
 
         ProgressBar progressBar = new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
         progressBar.setProgress(0);
+        progressBar.setScaleY(3f);
 
         Drawable drawable = progressBar.getProgressDrawable();
         drawable.setColorFilter(new LightingColorFilter(
@@ -449,6 +560,8 @@ class RecyclerProgressAdapter extends RecyclerView.Adapter<RecyclerProgressAdapt
         view2.addView(progressBar);
 
         TextView txtPercent = new TextView(context);
+        txtPercent.setTextColor(context.getResources().getColor(R.color.colorGold));
+        txtPercent.setTextSize(20);
         txtPercent.setLayoutParams(new ViewGroup.LayoutParams(
                 200,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
