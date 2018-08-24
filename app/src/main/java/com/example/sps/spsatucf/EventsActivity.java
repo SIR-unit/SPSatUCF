@@ -46,7 +46,7 @@ public class EventsActivity extends AppCompatActivity {
         view.setLayoutManager(layoutManager);
         view.setAdapter(adapter);
         // ***********************
-        
+
         dref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -94,6 +94,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
             title = (TextView)view.findViewById(R.id.title);
             timeloc = (TextView)view.findViewById(R.id.timeloc);
             description = (TextView)view.findViewById(R.id.description);
+            image = (ImageView)view.findViewById(R.id.entryImage);
         }
     }
 
