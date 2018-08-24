@@ -9,7 +9,7 @@
         android:title="Events" />
     <item
         android:id="@+id/nav_polls"
-        android:title="Polls" />
+        android:title="Polling" />
     <item
         android:id="@+id/nav_quiz"
         android:title="Quiz" />
@@ -18,8 +18,8 @@
         android:title="Review" />
     <item
         android:id="@+id/nav_points"
-        android:title="Play for Points" />
+        android:title="Tournament" />
     <item
         android:id="@+id/nav_settings"
-        android:title="Setting" />
+        android:title="Settings" />
 </menu>

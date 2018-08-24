@@ -4,7 +4,6 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/colorBackground">
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
@@ -36,9 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#111111"
-        android:fitsSystemWindows="true"
+        android:background="@color/colorBackground"
         app:itemTextColor="@color/colorGold"
-        app:menu="@menu/drawer_view"/>
+        app:menu="@menu/drawer_view"
+        app:headerLayout="@layout/navigation_header"/>
 
 </android.support.v4.widget.DrawerLayout>

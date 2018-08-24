@@ -14,6 +14,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
@@ -78,21 +81,15 @@ public class QuizActivity extends AppCompatActivity implements GestureDetector.O
 
         gestureScanner = new GestureDetector(this);
 
+
+        String title = "Quiz Yourself";
+        SpannableString s = new SpannableString(title);
+        s.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorGold)), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getSupportActionBar().setTitle(s);
+
         SetupDrawerMenu();
 
         sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-/*        String email = sharedPreferences.getString("email", null);
-        String password = sharedPreferences.getString("password", null);
-
-
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-            Toast.makeText(QuizActivity.this, "Login Required", Toast.LENGTH_SHORT).show();
-            finish();
-            startActivity(new Intent(QuizActivity.this, LoginActivity.class));
-            return;                     // we cannot continue
-        }
-
-*/
 
         mDrawerLayout.setOnTouchListener(new View.OnTouchListener(){
             public boolean onTouch(View v, MotionEvent event){
@@ -105,26 +102,6 @@ public class QuizActivity extends AppCompatActivity implements GestureDetector.O
 
         // authenticate
         firebaseAuth = FirebaseAuth.getInstance();
-/*        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
-                this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful())
-                        {
-                            profile.user = firebaseAuth.getCurrentUser();
-
-                            Log.d("USER:", profile.user.getEmail());
-                            // read in user profile
-                            ReadUserProfiles();
-                            // read in list of questions
-                            ReadQuestions();
-                        } else {
-                            Log.d("ERROR:", "Failed to authenticate");
-                        }
-                    }
-                }
-        );
-        */
 
         if (firebaseAuth.getCurrentUser() == null) {
             Toast.makeText(QuizActivity.this, "Login Required", Toast.LENGTH_SHORT).show();
@@ -167,6 +144,11 @@ public class QuizActivity extends AppCompatActivity implements GestureDetector.O
         // E button pressed
         // Set selected button to dark grey
         AnswerChosen('E');
+    }
+
+    public void onClick_btnNext(View v)
+    {
+        MoveToNextQuestion();
     }
 
     /*******************************

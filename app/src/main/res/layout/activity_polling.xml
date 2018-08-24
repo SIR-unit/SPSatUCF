@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -137,9 +136,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#111111"
-        android:fitsSystemWindows="true"
+        android:background="@color/colorBackground"
         app:itemTextColor="@color/colorGold"
-        app:menu="@menu/drawer_view"/>
+        app:menu="@menu/drawer_view"
+        app:headerLayout="@layout/navigation_header"/>
 
 </android.support.v4.widget.DrawerLayout>

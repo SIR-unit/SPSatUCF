@@ -1,11 +1,20 @@
 package com.example.sps.spsatucf;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,6 +37,8 @@ public class EventsActivity extends AppCompatActivity {
     private ArrayList<Entry> entries = new ArrayList<>();
     private CustomAdapter adapter;
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +46,15 @@ public class EventsActivity extends AppCompatActivity {
         // don't know with this does, it was populated with the file
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
+
+        SetupDrawerMenu();
+
+        String title = "Upcoming Events";
+        SpannableString s = new SpannableString(title);
+        s.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorGold)), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getSupportActionBar().setTitle(s);
+        SetupDrawerMenu();
+
 
         database = FirebaseDatabase.getInstance();
         dref = database.getReference().child(events);
@@ -75,6 +95,79 @@ public class EventsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 return;
+            }
+        });
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mToggle.onOptionsItemSelected(item))
+            return true;                // consumed
+        return super.onOptionsItemSelected(item);
+    }
+    protected void SetupDrawerMenu() {
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.closed);
+
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                // Set item as selected to show that this is what we're on?
+
+                Log.d("NAV MENU", "Selection " + menuItem.getItemId());
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_news: {
+                        finish();
+                        startActivity(new Intent(EventsActivity.this, NewsActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_events: {
+                        finish();
+                        startActivity(new Intent(EventsActivity.this, EventsActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_polls: {
+                        finish();
+                        startActivity(new Intent(EventsActivity.this, PollingActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_quiz: {
+                        finish();
+                        startActivity(new Intent(EventsActivity.this, QuizActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_review: {
+                        finish();
+                        startActivity(new Intent(EventsActivity.this, ReviewActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_points: {
+                        finish();
+                        startActivity(new Intent(EventsActivity.this, PointsActivity.class));
+                        break;
+                    }
+
+                    case R.id.nav_settings: {
+                        finish();
+                        startActivity(new Intent(EventsActivity.this, SettingsActivity.class));
+                        break;
+                    }
+                }
+                // Close drawers
+                mDrawerLayout.closeDrawers();
+
+                return true;
             }
         });
     }
