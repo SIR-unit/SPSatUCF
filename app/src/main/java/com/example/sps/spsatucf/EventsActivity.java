@@ -36,7 +36,7 @@ public class EventsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_events);
 
         database = FirebaseDatabase.getInstance();
-        dref = database.getReference(events);
+        dref = database.getReference().child(events);
         adapter = new CustomAdapter(entries);
 
         dref.addValueEventListener(new ValueEventListener() {
@@ -46,17 +46,16 @@ public class EventsActivity extends AppCompatActivity {
                 for(DataSnapshot event : dataSnapshot.getChildren()){
                     Entry entry = new Entry();
                     for(DataSnapshot param : event.getChildren()){
-                        String val = param.getKey();
-                        switch(val) {
-                            case "title": entry.title = val;
+                        switch(param.getKey()) {
+                            case "title": entry.title = param.getValue().toString();
                                 break;
-                            case "date": entry.date = val;
+                            case "date": entry.date = param.getValue().toString();
                                 break;
-                            case "loc": entry.loc = val;
+                            case "loc": entry.loc = param.getValue().toString();
                                 break;
-                            case "description": entry.description = val;
+                            case "description": entry.description = param.getValue().toString();
                                 break;
-                            case "imageloc": entry.imageloc = val;
+                            case "imageloc": entry.imageloc = param.getValue().toString();
                                 break;
                         }
                     }
