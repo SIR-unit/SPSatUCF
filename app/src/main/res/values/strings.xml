@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">SPSatUCF</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

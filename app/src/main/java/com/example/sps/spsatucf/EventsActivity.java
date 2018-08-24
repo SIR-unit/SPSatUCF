@@ -18,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class eventsActivity extends AppCompatActivity {
+public class EventsActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference dref;
