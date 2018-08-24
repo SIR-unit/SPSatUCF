@@ -3,6 +3,7 @@ package com.example.sps.spsatucf;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,13 @@ public class EventsActivity extends AppCompatActivity {
         dref = database.getReference().child(events);
         adapter = new CustomAdapter(entries);
 
+        // **********************
+        view = findViewById(R.id.eventsRecyclerView);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        view.setLayoutManager(layoutManager);
+        view.setAdapter(adapter);
+        // ***********************
+        
         dref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
