@@ -68,6 +68,12 @@ public class LoginActivity extends AppCompatActivity {
         email = edtEmail.getText().toString().trim();
         password = edtPassword.getText().toString().trim();
 
+        if (email.length() == 0 || password.length() == 0)
+        {
+            Toast.makeText(LoginActivity.this, "All fields required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         AttemptSignIn();
     }
     public void onClicked_btnSignup(View v)
