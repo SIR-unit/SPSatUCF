@@ -65,24 +65,13 @@ public class PointsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_points);
 
+        SetupDrawerMenu();
+
 
         String title = "Play for Points";
         SpannableString s = new SpannableString(title);
         s.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorGold)), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         getSupportActionBar().setTitle(s);
-
-        SetupDrawerMenu();
-
-/*        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        String email = sharedPreferences.getString("email", null);
-        String password = sharedPreferences.getString("password", null);
-
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-            Toast.makeText(PointsActivity.this, "Login Required", Toast.LENGTH_SHORT).show();
-            finish();
-            startActivity(new Intent(PointsActivity.this, LoginActivity.class));
-            return;                     // we cannot continue
-        }*/
 
         // authenticate
         firebaseAuth = FirebaseAuth.getInstance();
@@ -99,25 +88,6 @@ public class PointsActivity extends AppCompatActivity {
         ReadUserProfile();
         // read in list of questions
         ReadQuestion();
-/*        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
-                this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            profile.user = firebaseAuth.getCurrentUser();
-
-                            // Log.d("USER:", profile.user.getEmail());
-                            // read in user profile
-                            ReadUserProfile();
-                            // read in list of questions
-                            ReadQuestion();
-                        } else {
-                            Log.d("ERROR:", "Failed to authenticate");
-                        }
-                    }
-                }
-        );
-        */
     }
 
     void ReadUserProfile() {
@@ -193,7 +163,7 @@ public class PointsActivity extends AppCompatActivity {
     void DisplayQuestion()
     {
         TextView txtPoints = findViewById(R.id.txtPoints);
-        txtPoints.setText(profile.points.toString());
+        txtPoints.setText("Score:\n" + profile.points.toString());
 
         ArrayList<Button> buttons = new ArrayList<>();
         buttons.add((Button)findViewById(R.id.btnA));
@@ -255,14 +225,14 @@ public class PointsActivity extends AppCompatActivity {
 
         profile.lastID = question.id;
         if (answer == correctAns.charAt(0)) {
-            txtCorrect.setText("CORRECT!");
+            txtCorrect.setText("CORRECT");
             txtCorrect.setTextColor(getResources().getColor(R.color.colorCorrect));
 
             profile.points += question.points;
 
-            txtPoints.setText(profile.points.toString());
+            txtPoints.setText("Score:\n" + profile.points.toString());
         } else {
-            txtCorrect.setText("INCORRECT!");
+            txtCorrect.setText("INCORRECT");
             txtCorrect.setTextColor(getResources().getColor(R.color.colorIncorrect));
         }
         txtCorrect.setVisibility(View.VISIBLE);

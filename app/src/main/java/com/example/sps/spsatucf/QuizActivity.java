@@ -230,11 +230,11 @@ public class QuizActivity extends AppCompatActivity implements GestureDetector.O
         buttons.get(selIndex).setBackgroundColor(Color.parseColor("#555555"));
         buttons.get(corIndex).setBackgroundColor(Color.parseColor("#009900"));
         if (answer == correctAns.charAt(0)) {
-            txtCorrect.setText("CORRECT!");
+            txtCorrect.setText("CORRECT");
             txtCorrect.setTextColor(getResources().getColor(R.color.colorCorrect));
 
         } else {
-            txtCorrect.setText("INCORRECT!");
+            txtCorrect.setText("INCORRECT");
             txtCorrect.setTextColor(getResources().getColor(R.color.colorIncorrect));
         }
         txtCorrect.setVisibility(View.VISIBLE);
@@ -311,7 +311,7 @@ public class QuizActivity extends AppCompatActivity implements GestureDetector.O
                     DisplayCurrentQuestion();
 
 
-                Log.d("SUCCESS", "Read User Proile");
+                Log.d("SUCCESS", "Read User Profile");
                 Log.e("SUCCESS", "" + profile.currentQuestion);
             }
 

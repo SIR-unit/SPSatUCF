@@ -6,14 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorBackground"
-        tools:context=".PointsActivity">
-
         <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
         <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorBackground"
-            tools:context=".QuizActivity">
+            tools:context=".PointsActivity">
 
             <Button
                 android:id="@+id/btnA"
@@ -130,60 +122,45 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="2dp"
                 android:text="CORRECT!"
+                android:gravity="center"
                 android:textAlignment="center"
                 android:textSize="40dp"
-                android:visibility="invisible"
                 android:textStyle="bold"
+                android:visibility="invisible"
                 app:fontFamily="sans-serif-condensed"
                 app:layout_constraintBottom_toTopOf="@+id/imgQuestion"
-                app:layout_constraintEnd_toStartOf="@+id/btnReturn"
+                app:layout_constraintEnd_toStartOf="@+id/txtPoints"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtPointsLbl"
-                android:layout_width="130dp"
-                android:layout_height="41dp"
-                android:layout_marginBottom="9dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="12dp"
-                android:gravity="left"
-                android:text="Points"
-                android:textAlignment="gravity"
-                android:textColor="@color/colorGold"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/imgQuestion"
-                app:layout_constraintEnd_toStartOf="@+id/txtPoints"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <TextView
                 android:id="@+id/txtPoints"
-                android:layout_width="130dp"
-                android:layout_height="41dp"
-                android:layout_marginBottom="9dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="12dp"
-                android:gravity="right"
+                android:layout_width="150dp"
+                android:layout_height="61dp"
+                android:layout_marginBottom="40dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
                 android:text=""
-                android:textAlignment="gravity"
+                android:gravity="center"
+                android:textAlignment="center"
                 android:textColor="@color/colorGold"
                 android:textSize="20sp"
+                android:textStyle="bold"
+                android:background="@drawable/back_border"
                 app:layout_constraintBottom_toTopOf="@+id/imgQuestion"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/txtPointsLbl"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/txtCorrect"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
         </android.support.constraint.ConstraintLayout>
 
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.design.widget.NavigationView
+<android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

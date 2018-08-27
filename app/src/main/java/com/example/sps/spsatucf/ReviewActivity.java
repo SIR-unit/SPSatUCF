@@ -283,10 +283,10 @@ public class ReviewActivity extends AppCompatActivity implements GestureDetector
         buttons.get(corIndex).setBackgroundColor(Color.parseColor("#009900"));
 
         if (answer == correctAns.charAt(0)) {
-            txtCorrect.setText("CORRECT!");
+            txtCorrect.setText("CORRECT");
             txtCorrect.setTextColor(getResources().getColor(R.color.colorCorrect));
         } else {
-            txtCorrect.setText("INCORRECT!");
+            txtCorrect.setText("INCORRECT");
             txtCorrect.setTextColor(getResources().getColor(R.color.colorIncorrect));
         }
 
