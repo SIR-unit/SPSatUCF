@@ -45,7 +45,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(RegistrationActivity.this, "All fields are required.", Toast.LENGTH_SHORT).show();
         } else {
-            fireAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            fireAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {

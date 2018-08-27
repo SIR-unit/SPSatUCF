@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.CompoundButtonCompat;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,6 +57,7 @@ public class PollingActivity extends AppCompatActivity {
 
     final String pollingTable = "poll";
     final String questionField = "question";
+    final String imageField = "image";
     final String numAnswersField = "numAnswers";
     final String answersField = "answers";
     final String resultsField = "results";
@@ -68,6 +71,7 @@ public class PollingActivity extends AppCompatActivity {
     private int maxVote;
     private int totVotes;
     private String question;
+    private String imageLink;
     private Integer numAnswers;
     private ArrayList<String> answers = new ArrayList<>();
 
@@ -93,8 +97,11 @@ public class PollingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_polling);
 
+        // set up drawer menu (top left)
         SetupDrawerMenu();
 
+
+        // Change color of title bar
         String title = "Polling";
         SpannableString s = new SpannableString(title);
         s.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorGold)), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -109,34 +116,6 @@ public class PollingActivity extends AppCompatActivity {
             startActivity(new Intent(PollingActivity.this, LoginActivity.class));
             return;                     // we cannot continue
         }
-
-/*        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        String email = sharedPreferences.getString("email", null);
-        String password = sharedPreferences.getString("password", null);
-
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-            Toast.makeText(PollingActivity.this, "Login Required", Toast.LENGTH_SHORT).show();
-            finish();
-            startActivity(new Intent(PollingActivity.this, LoginActivity.class));
-            return;                     // we cannot continue
-        }
-
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
-                this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful())
-                        {
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Log.d("USER:", user.getEmail());
-                        } else {
-                            Log.d("ERROR:", "Failed to authenticate");
-                        }
-                    }
-                }
-        );
-*/
-
 
         SetupReference();
 
@@ -246,10 +225,68 @@ public class PollingActivity extends AppCompatActivity {
 
         Log.d("DATABASE", db_ref.toString());
 
+        db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // make sure there is a poll at all
+                if (!dataSnapshot.child(pollingTable).exists())
+                {
+                    ImageView imgQuestion = findViewById(R.id.imgQuestion);
+                    TextView txtQuestion = findViewById(R.id.txtQuestion);
+                    txtQuestion.setVisibility(View.VISIBLE);
+                    txtQuestion.setText("No poll in progress.");
+                    imgQuestion.setVisibility(View.INVISIBLE);
+
+                    Button btnVote = findViewById(R.id.btnVote);
+                    btnVote.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Error", "Error trying to get polling table" + databaseError);
+            }
+        });
         db_ref.child(pollingTable).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // if there is no current poll but some field IS
+                // being changed in the database it is possible we end up here anyway
+                // just make sure there is a question or image
+                // if not, no poll in progress.
+                if (!dataSnapshot.child(questionField).exists() && !dataSnapshot.child(imageField).exists())
+                {
+                    ImageView imgQuestion = findViewById(R.id.imgQuestion);
+                    TextView txtQuestion = findViewById(R.id.txtQuestion);
+                    txtQuestion.setVisibility(View.VISIBLE);
+                    txtQuestion.setText("No poll in progress.");
+                    imgQuestion.setVisibility(View.INVISIBLE);
+
+                    Button btnVote = findViewById(R.id.btnVote);
+                    btnVote.setEnabled(false);
+                    return;             // bail early
+                }
+
                 question = dataSnapshot.child(questionField).getValue(String.class);
+                imageLink = dataSnapshot.child(imageField).getValue(String.class);
+
+                // same thing if there is no "question" string or "image" to view
+                if (question.length() <= 0 && imageLink.length() <= 0)
+                {
+                    ImageView imgQuestion = findViewById(R.id.imgQuestion);
+                    TextView txtQuestion = findViewById(R.id.txtQuestion);
+                    txtQuestion.setVisibility(View.VISIBLE);
+                    txtQuestion.setText("No poll in progress.");
+                    imgQuestion.setVisibility(View.INVISIBLE);
+
+                    Button btnVote = findViewById(R.id.btnVote);
+                    btnVote.setEnabled(false);
+
+                    return;             // bail early
+                }
+
+
+
                 numAnswers = dataSnapshot.child(numAnswersField).getValue(Integer.class);
 
                 answers.clear();
@@ -258,6 +295,36 @@ public class PollingActivity extends AppCompatActivity {
                     answers.add(snapshot.getValue().toString());
 
                 ResetUI();
+
+                db_ref.child(pollingTable).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                            if (dataSnapshot.child(resultsField).exists() &&
+                                    dataSnapshot.child(resultsField).child(user.getUid()).exists())
+                            {
+                                DataSnapshot snapshot = dataSnapshot.child(resultsField).child(user.getUid());
+                                String[] votes = snapshot.getValue().toString().split(" ");     // grab values
+
+                                // for each vote
+                                for (String v : votes) {
+                                    if (v == "") continue;
+
+                                    int i = Integer.parseInt(v);    // vote as integer
+
+                                    if (i >= answers.size())
+                                        continue;                   // protect against erroneous votes
+
+                                    checkBoxes.get(i).setChecked(true);
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d("Error", "Error trying to get polling table" + databaseError);
+                        }
+                     });
 
                 Log.d("SUCCESS", "FOUND QUESTION DB " + question + " NUM ANSWERS " + numAnswers.toString());
             }
@@ -271,8 +338,21 @@ public class PollingActivity extends AppCompatActivity {
     protected void ResetUI()
     {
         TextView txtQuestion = findViewById(R.id.txtQuestion);
-        txtQuestion.setText(question);
-        txtQuestion.setTextSize(20);
+        ImageView imgQuestion = findViewById(R.id.imgQuestion);
+        if (imageLink.length() > 0) {
+
+            imgQuestion.setVisibility(View.VISIBLE);
+            new DownloadImageTask((ImageView) findViewById(R.id.imgQuestion))
+                    .execute(imageLink);
+            txtQuestion.setVisibility(View.INVISIBLE);
+        } else
+        {
+            txtQuestion.setVisibility(View.VISIBLE);
+            txtQuestion.setText(question);
+            txtQuestion.setTextSize(20);
+            imgQuestion.setVisibility(View.INVISIBLE);
+        }
+
 
         checkBoxes.clear();
         for (int i = 0; i < answers.size(); i++)
@@ -286,13 +366,23 @@ public class PollingActivity extends AppCompatActivity {
         RecyclerView.Adapter rclAdapter = new RecyclerAnswerAdapter(answers, numAnswers, checkBoxes);
         rclView.setAdapter(rclAdapter);
 
+        Button btnVote = findViewById(R.id.btnVote);
+        btnVote.setEnabled(true);
 
     }
     protected void PostVote()
     {
         TextView txtQuestion = findViewById(R.id.txtQuestion);
-        txtQuestion.setText(question);
-        txtQuestion.setTextSize(20);
+        ImageView imgQuestion = findViewById(R.id.imgQuestion);
+        if (imageLink.length() > 0) {
+
+            imgQuestion.setVisibility(View.VISIBLE);
+            txtQuestion.setVisibility(View.INVISIBLE);
+        } else
+        {
+            txtQuestion.setVisibility(View.VISIBLE);
+            imgQuestion.setVisibility(View.INVISIBLE);
+        }
 
         RecyclerView rclView = findViewById(R.id.rclView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
