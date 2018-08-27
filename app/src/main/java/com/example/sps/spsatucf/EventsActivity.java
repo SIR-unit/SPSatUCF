@@ -28,6 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class EventsActivity extends AppCompatActivity {
 
@@ -48,19 +51,17 @@ public class EventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
 
+        // creates dropdown menu and title bar.
         SetupDrawerMenu();
-
         String title = "Upcoming Events";
         SpannableString s = new SpannableString(title);
         s.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorGold)), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         getSupportActionBar().setTitle(s);
-        SetupDrawerMenu();
 
-
+        // get reference database, create adapter, and link adapter to the events recycler view.
         database = FirebaseDatabase.getInstance();
         dref = database.getReference().child(events);
         adapter = new CustomAdapter(entries);
-
         view = findViewById(R.id.eventsRecyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         view.setLayoutManager(layoutManager);
@@ -75,6 +76,7 @@ public class EventsActivity extends AppCompatActivity {
                 entries.clear();
                 Time now = new Time();
                 now.setToNow();
+
                 // each event is a child of the events data snopahot
                 for(DataSnapshot event : dataSnapshot.getChildren()){
 
@@ -96,20 +98,38 @@ public class EventsActivity extends AppCompatActivity {
                     }
 
                     // check that time in entry is after the current time
-                    Time entrytime = new Time();
                     String dateparts[];
-                    if (entry.date.contains("-"))
-                        dateparts = entry.date.split("-");
-                    else
-                        dateparts = entry.date.split("/");
-                    entrytime.set(Integer.parseInt(dateparts[1]) + 1,
-                                  Integer.parseInt(dateparts[0]),
-                                  Integer.parseInt(dateparts[2].split(" ")[0]));
+                    dateparts = entry.date.split("[-/ :]");
+
+                    int pmflag = (dateparts[4].toLowerCase().charAt(2) == 'p')? 12 : 0;
+
+                    // hacky way to make event not disappear until an hour after an event starts.
+                    // if you can think of a better way, please change.
+                    if (Integer.parseInt(dateparts[3]) + pmflag + 1 < 24)
+                        pmflag++;
+
+                    // set the event time.
+                    entry.time = new Time();
+                    entry.time.set(0,
+                                   Integer.parseInt(dateparts[4].substring(0, 2)),
+                                   Integer.parseInt(dateparts[3]) + pmflag,
+                                   Integer.parseInt(dateparts[1]) + 1,
+                                   Integer.parseInt(dateparts[0]),
+                                   Integer.parseInt(dateparts[2].split(" ")[0]));
 
                     // add this entry if it has yet to occur
-                    if (now.before(entrytime))
+                    if (now.before(entry.time))
                         entries.add(entry);
                 }
+                // sort entries before updating view
+                Collections.sort(entries, new Comparator<Entry>() {
+                    @Override
+                    public int compare(Entry o1, Entry o2) {
+                        return Time.compare(o1.time, o2.time);
+                    }
+                });
+
+                // update views by notifying the adapter.
                 adapter.notifyDataSetChanged();
             }
 
@@ -192,6 +212,7 @@ public class EventsActivity extends AppCompatActivity {
     }
 }
 
+// custom adapter for the RecyclerView
 class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
 
     private ArrayList<Entry> entries;
@@ -215,6 +236,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         this.entries = entries;
     }
 
+    // This function reads the xml file (event_entry.xml) and turns it into a GUI element.
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -225,6 +247,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         );
     }
 
+    // apply values to entry in eventsRecyclerView.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         Entry entry = entries.get(i);
@@ -248,4 +271,5 @@ class Entry
     public String loc;
     public String description;
     public String imageloc;
+    public Time time;
 }
