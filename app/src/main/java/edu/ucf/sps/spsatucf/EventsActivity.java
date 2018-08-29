@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.format.Time;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 
 public class EventsActivity extends AppCompatActivity {
 
@@ -74,8 +74,7 @@ public class EventsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 entries.clear();
-                Time now = new Time();
-                now.setToNow();
+                GregorianCalendar now = new GregorianCalendar();
 
                 // each event is a child of the events data snopahot
                 for(DataSnapshot event : dataSnapshot.getChildren()){
@@ -109,13 +108,11 @@ public class EventsActivity extends AppCompatActivity {
                         pmflag++;
 
                     // set the event time.
-                    entry.time = new Time();
-                    entry.time.set(0,
-                                   Integer.parseInt(dateparts[4].substring(0, 2)),
-                                   Integer.parseInt(dateparts[3]) + pmflag,
-                                   Integer.parseInt(dateparts[1]) + 1,
-                                   Integer.parseInt(dateparts[0]),
-                                   Integer.parseInt(dateparts[2].split(" ")[0]));
+                    entry.time = new GregorianCalendar(Integer.parseInt(dateparts[2]),
+                            Integer.parseInt(dateparts[0]),
+                            Integer.parseInt(dateparts[1]) + 1,
+                            Integer.parseInt(dateparts[3]) + pmflag,
+                            Integer.parseInt(dateparts[4].substring(0, 2)));
 
                     // add this entry if it has yet to occur
                     if (now.before(entry.time))
@@ -125,7 +122,7 @@ public class EventsActivity extends AppCompatActivity {
                 Collections.sort(entries, new Comparator<Entry>() {
                     @Override
                     public int compare(Entry o1, Entry o2) {
-                        return Time.compare(o1.time, o2.time);
+                        return o1.time.compareTo(o2.time);
                     }
                 });
 
@@ -271,5 +268,5 @@ class Entry
     public String loc;
     public String description;
     public String imageloc;
-    public Time time;
+    public GregorianCalendar time;
 }
