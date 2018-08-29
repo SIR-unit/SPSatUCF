@@ -33,6 +33,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.ucf.sps.spsatucf.R;
+
+import com.google.android.gms.flags.impl.DataUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -81,6 +83,18 @@ public class PollingActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
+    private static boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
+    }
     /*
     Polling data (3 columns)
     ->Question: "How are your class?"
@@ -184,7 +198,7 @@ public class PollingActivity extends AppCompatActivity {
                     String[] votes = snapshot.getValue().toString().split(" ");     // grab values
                     // for each vote
                     for (String v : votes) {
-                        if (v == "") continue;
+                        if (v == "" || !isNumeric(v)) continue;
                         int i = Integer.parseInt(v);    // vote as integer
 
                         if (i >= pollingResults.size())
@@ -375,6 +389,7 @@ public class PollingActivity extends AppCompatActivity {
     {
         TextView txtQuestion = findViewById(R.id.txtQuestion);
         ImageView imgQuestion = findViewById(R.id.imgQuestion);
+
         if (imageLink.length() > 0) {
 
             imgQuestion.setVisibility(View.VISIBLE);

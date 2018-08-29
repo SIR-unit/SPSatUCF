@@ -52,7 +52,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(RegistrationActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegistrationActivity.this, PollingActivity.class));
+                        startActivity(new Intent(RegistrationActivity.this, NewsActivity.class));
                         finish();
                     } else {
                         Toast.makeText(RegistrationActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
