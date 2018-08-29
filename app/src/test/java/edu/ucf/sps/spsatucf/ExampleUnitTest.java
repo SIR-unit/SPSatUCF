@@ -1,4 +1,4 @@
-package com.example.sps.spsatucf;
+package edu.ucf.sps.spsatucf;
 
 import org.junit.Test;
 

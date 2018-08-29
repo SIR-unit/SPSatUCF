@@ -1,4 +1,4 @@
-package com.example.sps.spsatucf;
+package edu.ucf.sps.spsatucf;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,13 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 
+import edu.ucf.sps.spsatucf.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SettingsActivity extends AppCompatActivity {
-    final String sharedPrefFile = "com.example.android.spsatucf";
+    final String sharedPrefFile = "edu.ucf.android.spsatucf";
 
     final String QuizProfileTable = "quiz-profiles";
     final String PastQuestionsField = "pastQuestions";

@@ -1,4 +1,4 @@
-package com.example.sps.spsatucf;
+package edu.ucf.sps.spsatucf;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import edu.ucf.sps.spsatucf.R;
 
 public class NewsActivity extends AppCompatActivity {
 

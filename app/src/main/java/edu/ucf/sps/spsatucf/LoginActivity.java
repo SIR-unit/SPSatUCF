@@ -1,4 +1,4 @@
-package com.example.sps.spsatucf;
+package edu.ucf.sps.spsatucf;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import edu.ucf.sps.spsatucf.R;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

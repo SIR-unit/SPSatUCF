@@ -1,11 +1,13 @@
-package com.example.sps.spsatucf;
+package edu.ucf.sps.spsatucf;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.MonthDisplayHelper;
 import android.view.Window;
 import android.view.WindowManager;
+
+
+import edu.ucf.sps.spsatucf.R;
 
 public class SplashActivity extends AppCompatActivity {
 
