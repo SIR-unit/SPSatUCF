@@ -700,6 +700,8 @@ class RecyclerProgressAdapter extends RecyclerView.Adapter<RecyclerProgressAdapt
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.txtAnswer.setText(pollAnswers.get(position));
 
+        if (totVotes == 0) totVotes = 1;
+
         holder.txtPercent.setText(Integer.toString((int)Math.round(results.get(position) * 100.0 / totVotes)) + "%");
         holder.progressBar.setProgress((int)Math.round(results.get(position) * 100.0 / totVotes));
         // progressBars.set(position, holder.progressBar);

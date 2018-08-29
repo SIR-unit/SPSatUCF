@@ -251,7 +251,11 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         myViewHolder.title.setText(entry.title);
         myViewHolder.timeloc.setText(entry.date + " at " + entry.loc);
         myViewHolder.description.setText(entry.description);
-        myViewHolder.image.setImageResource(R.drawable.sps_logo);
+        myViewHolder.image.setImageResource(R.drawable.sps_logo2);
+
+        if (entry.imageloc.length() > 0)
+            new DownloadImageTask(myViewHolder.image).execute(entry.imageloc);
+
     }
 
     @Override
