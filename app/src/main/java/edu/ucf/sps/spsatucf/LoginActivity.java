@@ -2,6 +2,7 @@ package edu.ucf.sps.spsatucf;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText edtEmail = findViewById(R.id.edtUsername);
         EditText edtPassword = findViewById(R.id.edtPassword);
 
-        sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         rememberme = sharedPreferences.getBoolean("rememberme", true);
 
         if (rememberme) {

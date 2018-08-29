@@ -214,7 +214,7 @@ public class PollingActivity extends AppCompatActivity {
                     if (pollingResults.get(i) > maxVote)
                         maxVote = pollingResults.get(i);
 
-                for (int i = 1; i < pollingResults.size(); i++)
+                for (int i = 0; i < pollingResults.size(); i++)
                     totVotes += pollingResults.get(i);
 
                 for (int i = 0; i < pollingResults.size(); i++)

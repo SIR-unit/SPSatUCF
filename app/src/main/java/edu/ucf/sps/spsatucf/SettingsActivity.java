@@ -2,6 +2,7 @@ package edu.ucf.sps.spsatucf;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -46,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
         CheckBox chkRememberMe = findViewById(R.id.chkRememberMe);
         CheckBox chkRemoveQuiz = findViewById(R.id.chkRemoveQuiz);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean rememberme = sharedPreferences.getBoolean("rememberme", true);
         boolean removefromquiz = sharedPreferences.getBoolean("removefromquiz", true);
 
@@ -59,14 +60,14 @@ public class SettingsActivity extends AppCompatActivity {
     public void onClicked_chkRemoveQuiz(View v) {
         CheckBox chkRememberMe = findViewById(R.id.chkRemoveQuiz);
         if (chkRememberMe.isChecked()) {
-            SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putBoolean("removefromquiz", true);
 
             editor.apply();
         } else {        // unchecked
-            SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putBoolean("removefromquiz", false);
@@ -80,14 +81,14 @@ public class SettingsActivity extends AppCompatActivity {
         // preference change
         CheckBox chkRememberMe = findViewById(R.id.chkRememberMe);
         if (chkRememberMe.isChecked()) {
-            SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putBoolean("rememberme", true);
 
             editor.apply();
         } else {                //uncheckedx
-            SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putBoolean("rememberme", false);

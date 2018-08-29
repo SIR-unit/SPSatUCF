@@ -3,6 +3,7 @@ package edu.ucf.sps.spsatucf;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
 import android.support.constraint.ConstraintLayout;
@@ -90,7 +91,7 @@ public class QuizActivity extends AppCompatActivity implements GestureDetector.O
 
         SetupDrawerMenu();
 
-        sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         mDrawerLayout.setOnTouchListener(new View.OnTouchListener(){
             public boolean onTouch(View v, MotionEvent event){
@@ -240,6 +241,7 @@ public class QuizActivity extends AppCompatActivity implements GestureDetector.O
         }
         txtCorrect.setVisibility(View.VISIBLE);
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sharedPreferences.getBoolean("removefromquiz", true)) {
             // Committing question to database
             profile.pastQuestions.put(profile.currentQuestion, Character.toString(answer));
